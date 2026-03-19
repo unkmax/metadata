@@ -1,0 +1,215 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "IFSPortal_XREF_API",
+    "version": "1.0.0",
+    "description": ""
+  },
+  "servers": [
+    {
+      "url": "https://api-development.exeloncorp.com"
+    }
+  ],
+  "paths": {
+    "/eu/was/getxref/v1": {
+      "post": {
+        "summary": "Get XREF From AZURE SQL DB APIGEE BASIC AUTH",
+        "security": [
+          {
+            "BasicAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetXrefRequest"
+              },
+              "example": {
+                "SourceValue": "WORK-ORDER-NUMBER"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response - XREF mappings returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetXrefResponse"
+                },
+                "example": [
+                  {
+                    "ID": "1",
+                    "Integration": "test",
+                    "FromSystem": "AS8",
+                    "ToSystem": "IFS",
+                    "OpCo": "PHI",
+                    "ListType": "POLE",
+                    "ListName": "ATTRIBUTE",
+                    "SourceValue": "WORK-ORDER-NUMBER",
+                    "DestinationValue": "INSTALL_WO_NUM"
+                  },
+                  {
+                    "ID": "2",
+                    "Integration": "test",
+                    "FromSystem": "AS8",
+                    "ToSystem": "IFS",
+                    "OpCo": "PHI",
+                    "ListType": "LIGHT",
+                    "ListName": "ATTRIBUTE",
+                    "SourceValue": "WORK-ORDER-NUMBER",
+                    "DestinationValue": "INSTALL_WO_NUM"
+                  }
+                ]
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "code": "400",
+                  "message": "Invalid request payload"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid Basic Auth credentials",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "code": "401",
+                  "message": "Unauthorized"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "code": "500",
+                  "message": "Unexpected error occurred"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BasicAuth": {
+        "type": "http",
+        "scheme": "basic"
+      }
+    },
+    "schemas": {
+      "GetXrefRequest": {
+        "type": "object",
+        "required": [
+          "SourceValue"
+        ],
+        "properties": {
+          "SourceValue": {
+            "type": "string",
+            "description": "Source value used to lookup XREF mappings",
+            "example": "WORK-ORDER-NUMBER"
+          }
+        }
+      },
+      "GetXrefResponse": {
+        "type": "array",
+        "description": "List of XREF mapping records",
+        "items": {
+          "$ref": "#/components/schemas/XrefRecord"
+        }
+      },
+      "XrefRecord": {
+        "type": "object",
+        "required": [
+          "ID",
+          "Integration",
+          "FromSystem",
+          "ToSystem",
+          "OpCo",
+          "ListType",
+          "ListName",
+          "SourceValue",
+          "DestinationValue"
+        ],
+        "properties": {
+          "ID": {
+            "type": "string",
+            "example": "1"
+          },
+          "Integration": {
+            "type": "string",
+            "example": "test"
+          },
+          "FromSystem": {
+            "type": "string",
+            "example": "AS8"
+          },
+          "ToSystem": {
+            "type": "string",
+            "example": "IFS"
+          },
+          "OpCo": {
+            "type": "string",
+            "example": "PHI"
+          },
+          "ListType": {
+            "type": "string",
+            "example": "POLE"
+          },
+          "ListName": {
+            "type": "string",
+            "example": "ATTRIBUTE"
+          },
+          "SourceValue": {
+            "type": "string",
+            "example": "WORK-ORDER-NUMBER"
+          },
+          "DestinationValue": {
+            "type": "string",
+            "example": "INSTALL_WO_NUM"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "properties": {
+          "code": {
+            "type": "string",
+            "example": "400"
+          },
+          "message": {
+            "type": "string",
+            "example": "Invalid request payload"
+          }
+        }
+      }
+    }
+  }
+}
