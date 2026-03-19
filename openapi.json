@@ -49,7 +49,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetXrefResponse"
+                  "type": "array",
+                  "description": "List of XREF mapping records",
+                  "items": {
+                    "$ref": "#/components/schemas/XrefRecord"
+                  }
                 }
               }
             }
