@@ -30,7 +30,18 @@
           }
         ],
         "requestBody": {
-          "$ref": "#/components/requestBodies/GetXrefRequest"
+          "description": "Request payload to fetch XREF mappings",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetXrefRequest"
+              },
+              "example": {
+                "SourceValue": "WORK-ORDER-NUMBER"
+              }
+            }
+          }
         },
         "responses": {
           "200": {
@@ -93,22 +104,6 @@
         "type": "http",
         "scheme": "basic",
         "description": "Basic authentication using username and password"
-      }
-    },
-    "requestBodies": {
-      "GetXrefRequest": {
-        "description": "Request payload to fetch XREF mappings",
-        "required": true,
-        "content": {
-          "application/json": {
-            "schema": {
-              "$ref": "#/components/schemas/GetXrefRequest"
-            },
-            "example": {
-              "SourceValue": "WORK-ORDER-NUMBER"
-            }
-          }
-        }
       }
     },
     "schemas": {
