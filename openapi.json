@@ -1,45 +1,23 @@
 {
-  "openapi": "3.0.4",
+  "openapi": "3.0.0",
   "info": {
-    "title": "IFSPortal XREF API",
-    "description": "API for retrieving XREF mappings from Azure SQL DB via Apigee using Basic Authentication.",
-    "version": "1.0.0"
+    "title": "IFSPortal_XREF_API",
+    "version": "1.0.0",
+    "description": ""
   },
-  "servers": [
-    {
-      "url": "https://api-development.exeloncorp.com",
-      "description": "Development server"
-    }
-  ],
-  "tags": [
-    {
-      "name": "XREF",
-      "description": "Operations related to XREF mappings"
-    }
-  ],
+  "servers": [ { "url": "https://api-development.exeloncorp.com" } ],
   "paths": {
     "/eu/was/getxref/v1": {
       "post": {
-        "tags": ["XREF"],
-        "summary": "Get XREF mappings",
-        "description": "Retrieve XREF mappings based on SourceValue.",
-        "operationId": "getXref",
-        "security": [
-          {
-            "BasicAuth": []
-          }
-        ],
+        "tags": [ "XREF" ],
+        "summary": "Get XREF From AZURE SQL DB APIGEE BASIC AUTH",
+        "security": [ { "BasicAuth": [] } ],
         "requestBody": {
-          "description": "Request payload to fetch XREF mappings",
           "required": true,
           "content": {
             "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/GetXrefRequest"
-              },
-              "example": {
-                "SourceValue": "WORK-ORDER-NUMBER"
-              }
+              "schema": { "$ref": "#/components/schemas/GetXrefRequest" },
+              "example": { "SourceValue": "WORK-ORDER-NUMBER" }
             }
           }
         },
@@ -48,13 +26,31 @@
             "description": "Successful response - XREF mappings returned",
             "content": {
               "application/json": {
-                "schema": {
-                  "type": "array",
-                  "description": "List of XREF mapping records",
-                  "items": {
-                    "$ref": "#/components/schemas/XrefRecord"
+                "schema": { "$ref": "#/components/schemas/GetXrefResponse" },
+                "example": [
+                  {
+                    "ID": "1",
+                    "Integration": "test",
+                    "FromSystem": "AS8",
+                    "ToSystem": "IFS",
+                    "OpCo": "PHI",
+                    "ListType": "POLE",
+                    "ListName": "ATTRIBUTE",
+                    "SourceValue": "WORK-ORDER-NUMBER",
+                    "DestinationValue": "INSTALL_WO_NUM"
+                  },
+                  {
+                    "ID": "2",
+                    "Integration": "test",
+                    "FromSystem": "AS8",
+                    "ToSystem": "IFS",
+                    "OpCo": "PHI",
+                    "ListType": "LIGHT",
+                    "ListName": "ATTRIBUTE",
+                    "SourceValue": "WORK-ORDER-NUMBER",
+                    "DestinationValue": "INSTALL_WO_NUM"
                   }
-                }
+                ]
               }
             }
           },
@@ -62,18 +58,22 @@
             "description": "Bad Request - invalid input",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "example": {
+                  "code": "400",
+                  "message": "Invalid request payload"
                 }
               }
             }
           },
           "401": {
-            "description": "Unauthorized - missing or invalid credentials",
+            "description": "Unauthorized - missing or invalid Basic Auth credentials",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "example": {
+                  "code": "401",
+                  "message": "Unauthorized"
                 }
               }
             }
@@ -82,18 +82,10 @@
             "description": "Internal Server Error",
             "content": {
               "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" },
+                "example": {
+                  "code": "500",
+                  "message": "Unexpected error occurred"
                 }
               }
             }
@@ -106,14 +98,13 @@
     "securitySchemes": {
       "BasicAuth": {
         "type": "http",
-        "scheme": "basic",
-        "description": "Basic authentication using username and password"
+        "scheme": "basic"
       }
     },
     "schemas": {
       "GetXrefRequest": {
         "type": "object",
-        "required": ["SourceValue"],
+        "required": [ "SourceValue" ],
         "properties": {
           "SourceValue": {
             "type": "string",
@@ -125,23 +116,11 @@
       "GetXrefResponse": {
         "type": "array",
         "description": "List of XREF mapping records",
-        "items": {
-          "$ref": "#/components/schemas/XrefRecord"
-        }
+        "items": { "$ref": "#/components/schemas/XrefRecord" }
       },
       "XrefRecord": {
         "type": "object",
-        "required": [
-          "ID",
-          "Integration",
-          "FromSystem",
-          "ToSystem",
-          "OpCo",
-          "ListType",
-          "ListName",
-          "SourceValue",
-          "DestinationValue"
-        ],
+        "required": [ "ID", "Integration", "FromSystem", "ToSystem", "OpCo", "ListType", "ListName", "SourceValue", "DestinationValue" ],
         "properties": {
           "ID": {
             "type": "string",
@@ -183,7 +162,7 @@
       },
       "ErrorResponse": {
         "type": "object",
-        "required": ["code", "message"],
+        "required": [ "code", "message" ],
         "properties": {
           "code": {
             "type": "string",
