@@ -26,7 +26,11 @@
             "description": "Successful response - XREF mappings returned",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/GetXrefResponse" },
+                "schema": { 
+                  "type": "array",
+                  "description": "List of XREF mapping records",
+                  "items": { "$ref": "#/components/schemas/XrefRecord" } 
+                },
                 "example": [
                   {
                     "ID": "1",
